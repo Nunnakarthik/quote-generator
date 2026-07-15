@@ -8,32 +8,23 @@ def client():
         yield client
 
 def test_home_page(client):
-    """Test that the homepage loads and returns expected message"""
+    """Test that the homepage loads and shows the quote card"""
     response = client.get('/')
     assert response.status_code == 200
-    data = response.get_json()
-    assert data['message'] == "Welcome to the Quote Generator API!"
+    assert b"Quote of the Day" in response.data
 
 def test_random_quote(client):
     """Test that /quote returns a valid quote with required fields"""
     response = client.get('/quote')
     assert response.status_code == 200
     data = response.get_json()
-    assert 'id' in data
     assert 'quote' in data
     assert 'author' in data
 
-def test_quote_by_valid_id(client):
-    """Test fetching a specific quote that exists"""
-    response = client.get('/quote/1')
+def test_quote_of_the_day(client):
+    """Test that /quote/today returns a valid quote"""
+    response = client.get('/quote/today')
     assert response.status_code == 200
     data = response.get_json()
-    assert data['id'] == 1
-    assert data['author'] == "Steve Jobs"
-
-def test_quote_by_invalid_id(client):
-    """Test fetching a quote that doesn't exist"""
-    response = client.get('/quote/999')
-    assert response.status_code == 404
-    data = response.get_json()
-    assert data['error'] == "Quote not found"
+    assert 'quote' in data
+    assert 'author' in data
