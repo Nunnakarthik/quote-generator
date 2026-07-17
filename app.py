@@ -58,9 +58,9 @@ HTML_PAGE = """
   body {
     min-height:100vh;
     display:flex; align-items:center; justify-content:center;
-    background: linear-gradient(-45deg, #1a1338, #2d1b4e, #1a2a4e, #16142a);
+    background: linear-gradient(-45deg, #ff6b9d, #a855f7, #6366f1, #22d3ee, #ff6b9d);
     background-size: 400% 400%;
-    animation: gradientShift 16s ease infinite;
+    animation: gradientShift 12s ease infinite;
     font-family:'Inter', sans-serif;
     padding:24px;
     position:relative;
@@ -71,97 +71,151 @@ HTML_PAGE = """
     100% { background-position: 0% 50%; }
   }
   .orb {
-    position:fixed; border-radius:50%; filter:blur(60px); opacity:0.45; pointer-events:none;
+    position:fixed; border-radius:50%; filter:blur(70px); opacity:0.55; pointer-events:none;
   }
-  .orb1 { width:340px; height:340px; background:#8b5cf6; top:-80px; left:-80px; animation:float1 12s ease-in-out infinite; }
-  .orb2 { width:280px; height:280px; background:#4f46e5; bottom:-60px; right:-60px; animation:float2 14s ease-in-out infinite; }
-  .orb3 { width:200px; height:200px; background:#ec4899; top:60%; left:75%; animation:float3 10s ease-in-out infinite; opacity:0.3; }
-  @keyframes float1 { 0%,100%{transform:translate(0,0);} 50%{transform:translate(40px,60px);} }
-  @keyframes float2 { 0%,100%{transform:translate(0,0);} 50%{transform:translate(-50px,-30px);} }
-  @keyframes float3 { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(-30px,40px) scale(1.15);} }
+  .orb1 { width:380px; height:380px; background:#fbbf24; top:-100px; left:-100px; animation:float1 10s ease-in-out infinite; }
+  .orb2 { width:320px; height:320px; background:#f472b6; bottom:-80px; right:-80px; animation:float2 13s ease-in-out infinite; }
+  .orb3 { width:240px; height:240px; background:#67e8f9; top:55%; left:80%; animation:float3 9s ease-in-out infinite; }
+  @keyframes float1 { 0%,100%{transform:translate(0,0);} 50%{transform:translate(60px,80px);} }
+  @keyframes float2 { 0%,100%{transform:translate(0,0);} 50%{transform:translate(-70px,-50px);} }
+  @keyframes float3 { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(-50px,60px) scale(1.2);} }
 
-  .wrap { width:100%; max-width:640px; position:relative; z-index:1; perspective:1200px; }
-  .badge {
-    display:inline-flex; align-items:center; gap:8px;
-    background:rgba(255,255,255,0.06);
-    border:1px solid rgba(255,255,255,0.12);
-    padding:7px 16px; border-radius:999px;
-    font-size:12px; font-weight:600; letter-spacing:1.5px;
-    text-transform:uppercase; color:#c4b5fd;
-    margin-bottom:22px;
-    animation: fadeInDown 0.7s ease both;
+  .particle {
+    position:fixed; border-radius:50%; background:rgba(255,255,255,0.85); pointer-events:none;
+    animation: drift linear infinite;
+    box-shadow:0 0 4px rgba(255,255,255,0.6);
   }
-  .dot { width:6px; height:6px; border-radius:50%; background:#a78bfa; box-shadow:0 0 10px 2px #a78bfa; animation: pulse 2s ease-in-out infinite; }
-  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
-  @keyframes fadeInDown { from{opacity:0; transform:translateY(-12px);} to{opacity:1; transform:translateY(0);} }
-  @keyframes fadeInUp { from{opacity:0; transform:translateY(20px) scale(0.98);} to{opacity:1; transform:translateY(0) scale(1);} }
+  @keyframes drift {
+    0% { transform:translateY(-10vh) translateX(0) scale(0); opacity:0; }
+    10% { opacity:1; }
+    50% { transform:translateY(50vh) translateX(20px) scale(1); }
+    90% { opacity:1; }
+    100% { transform:translateY(110vh) translateX(-15px) scale(1); opacity:0; }
+  }
+
+  .rope-wrap {
+    position:fixed; top:0; z-index:2;
+  }
+  .rope-inner {
+    display:flex; flex-direction:column; align-items:center;
+    transform-origin:top center;
+  }
+  .rope {
+    width:14px; min-height:40px;
+    background:
+      repeating-linear-gradient(120deg,
+        #c9a876 0px, #c9a876 4px,
+        #a8895f 4px, #a8895f 8px);
+    box-shadow:
+      inset -2px 0 3px rgba(0,0,0,0.35),
+      inset 2px 0 3px rgba(255,240,210,0.25),
+      0 0 6px rgba(0,0,0,0.3);
+    border-radius:3px;
+    position:relative;
+    opacity:0.92;
+  }
+  .rope::before, .rope::after {
+    content:'';
+    position:absolute; width:1px; background:#b89a6d; opacity:0.7;
+  }
+  .rope::before { top:15%; left:-4px; height:14px; transform:rotate(-25deg); }
+  .rope::after { top:55%; right:-4px; height:11px; transform:rotate(20deg); }
+  .knot {
+    width:22px; height:14px; margin-top:-3px;
+    background:radial-gradient(circle at 35% 30%, #c9a876, #7d5f3a 75%);
+    border-radius:50% 50% 40% 40%;
+    box-shadow:0 3px 6px rgba(0,0,0,0.45);
+  }
+
+ .sway { animation: idleSway 4.5s ease-in-out infinite; }
+  @keyframes idleSway {
+    0%,100% { transform: rotate(-1.4deg); }
+    50% { transform: rotate(1.4deg); }
+  }
+  .card-sway {
+    animation: cardSway 4.5s ease-in-out infinite;
+    transform-origin: top center;
+  }
+  @keyframes cardSway {
+    0%,100% { transform: rotate(-0.6deg); }
+    50% { transform: rotate(0.6deg); }
+  }
+
+  .rope-stretch .rope { animation: stretchPulse 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes stretchPulse {
+    0% { transform: scaleY(1) scaleX(1); }
+    35% { transform: scaleY(1.18) scaleX(0.7); }
+    55% { transform: scaleY(0.92) scaleX(1.15); }
+    75% { transform: scaleY(1.05) scaleX(0.92); }
+    100% { transform: scaleY(1) scaleX(1); }
+  }
+
+  .wrap { width:100%; max-width:640px; position:relative; z-index:1; }
 
   .card {
-    background:rgba(255,255,255,0.055);
+    background:rgba(255,255,255,0.12);
     backdrop-filter:blur(24px);
     -webkit-backdrop-filter:blur(24px);
-    border:1px solid rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.35);
     border-radius:26px;
     padding:52px 44px;
-    box-shadow:0 25px 70px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
-    transition:transform 0.15s ease-out, opacity 0.3s ease, box-shadow 0.3s ease;
-    transform-style:preserve-3d;
-    animation: fadeInUp 0.8s cubic-bezier(0.22,1,0.36,1) both;
+    box-shadow:0 25px 70px rgba(80,20,120,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
+    animation: fadeInUp 0.8s cubic-bezier(0.22,1,0.36,1) both, glow 4s ease-in-out infinite;
     position:relative;
     overflow:hidden;
+    min-height:260px;
   }
-  .card::before {
-    content:'';
-    position:absolute; inset:0;
-    background:linear-gradient(135deg, rgba(139,92,246,0.15), transparent 60%);
-    pointer-events:none;
+  @keyframes glow {
+    0%,100% { box-shadow:0 25px 70px rgba(80,20,120,0.35), inset 0 1px 0 rgba(255,255,255,0.4), 0 0 0 rgba(255,255,255,0); }
+    50% { box-shadow:0 25px 70px rgba(80,20,120,0.35), inset 0 1px 0 rgba(255,255,255,0.4), 0 0 50px rgba(255,255,255,0.15); }
   }
-  .card:hover { box-shadow:0 30px 90px rgba(139,92,246,0.25), inset 0 1px 0 rgba(255,255,255,0.1); }
-  .card.fade { opacity:0; transform:translateY(10px) scale(0.97) !important; }
+  @keyframes fadeInUp { from{opacity:0; transform:translateY(20px) scale(0.98);} to{opacity:1; transform:translateY(0) scale(1);} }
 
-  .quote-mark { font-family:'Fraunces',serif; font-size:60px; color:#a78bfa; line-height:0.4; margin-bottom:10px; opacity:0.7; text-shadow:0 0 30px rgba(167,139,250,0.5); }
+  .card.yank-up {
+    animation: yankUp 0.22s cubic-bezier(0.7,0,0.9,0.2) forwards !important;
+  }
+  @keyframes yankUp {
+    to { transform: translateY(-120vh); }
+  }
+  .card.drop-bounce {
+    animation: dropBounce 0.5s cubic-bezier(0.34,1.6,0.64,1) forwards !important;
+  }
+  @keyframes dropBounce {
+    from { transform: translateY(-120vh); }
+    to { transform: translateY(0); }
+  }
+
+  .quote-mark { font-family:'Fraunces',serif; font-size:60px; color:#fff; line-height:0.4; margin-bottom:10px; opacity:0.85; text-shadow:0 0 30px rgba(255,255,255,0.6); }
+
   .quote-text {
     font-family:'Fraunces', serif; font-style:italic; font-weight:500;
-    font-size:27px; line-height:1.45; color:#f5f3ff; margin-bottom:26px;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    font-size:27px; line-height:1.45; color:#fff; margin-bottom:26px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.15);
   }
-  .author {
-    font-size:15px; font-weight:600;
-    background:linear-gradient(90deg, #c4b5fd, #f0abfc);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  .author::before { content:'— '; color:#c4b5fd; -webkit-text-fill-color:#c4b5fd; }
+  .author { font-size:15px; font-weight:700; color:#fff9db; }
+  .author::before { content:'— '; opacity:0.8; }
 
-  .actions { display:flex; gap:10px; margin-top:34px; flex-wrap:wrap; position:relative; z-index:2; }
+  .actions { display:flex; gap:10px; margin-top:34px; flex-wrap:wrap; }
   button {
     font-family:'Inter',sans-serif; font-weight:600; font-size:14px;
-    padding:12px 20px; border-radius:13px; border:1px solid rgba(255,255,255,0.14);
-    background:rgba(255,255,255,0.07); color:#e9e5ff; cursor:pointer;
+    padding:12px 20px; border-radius:13px; border:none; cursor:pointer;
     display:flex; align-items:center; gap:8px;
     transition:all 0.2s cubic-bezier(0.22,1,0.36,1);
+    color:#fff;
   }
-  button:hover { background:rgba(255,255,255,0.14); transform:translateY(-2px); border-color:rgba(255,255,255,0.3); }
+  button:hover { transform:translateY(-2px) scale(1.03); }
   button:active { transform:translateY(0) scale(0.97); }
-  .primary {
-    background:linear-gradient(135deg,#8b5cf6,#6d28d9); border:none;
-    box-shadow:0 10px 25px rgba(139,92,246,0.4);
-    position:relative; overflow:hidden;
-  }
-  .primary:hover { box-shadow:0 14px 34px rgba(139,92,246,0.55); }
-  .footer-note { text-align:center; margin-top:26px; font-size:13px; color:rgba(255,255,255,0.35); animation: fadeInDown 1s ease both; }
-
-  .sparkle {
-    position:absolute; pointer-events:none; font-size:16px;
-    animation: sparkleFly 0.9s ease-out forwards;
-  }
-  @keyframes sparkleFly {
-    0% { opacity:1; transform:translate(0,0) scale(0.5) rotate(0deg); }
-    100% { opacity:0; transform:translate(var(--dx), var(--dy)) scale(1.3) rotate(180deg); }
-  }
+  button:disabled { opacity:0.6; cursor:default; transform:none; }
+  .primary { background:linear-gradient(135deg,#fbbf24,#f472b6); color:#3b1e0e; box-shadow:0 10px 25px rgba(251,191,36,0.5); }
+  .primary:hover { box-shadow:0 14px 34px rgba(251,191,36,0.7); }
+  .btn-copy { background:linear-gradient(135deg,#38bdf8,#6366f1); box-shadow:0 10px 25px rgba(56,189,248,0.45); }
+  .btn-copy:hover { box-shadow:0 14px 34px rgba(56,189,248,0.65); }
+  .btn-share { background:linear-gradient(135deg,#34d399,#059669); box-shadow:0 10px 25px rgba(52,211,153,0.45); }
+  .btn-share:hover { box-shadow:0 14px 34px rgba(52,211,153,0.65); }
 
   .toast {
     position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(20px);
-    background:#1e1b3a; border:1px solid rgba(255,255,255,0.15); color:#e9e5ff;
+    background:rgba(30,20,50,0.9); border:1px solid rgba(255,255,255,0.25); color:#fff;
     padding:13px 22px; border-radius:13px; font-size:14px; font-weight:500;
     opacity:0; pointer-events:none; transition:all 0.3s cubic-bezier(0.22,1,0.36,1);
     box-shadow:0 12px 30px rgba(0,0,0,0.45);
@@ -179,20 +233,26 @@ HTML_PAGE = """
   <div class="orb orb1"></div>
   <div class="orb orb2"></div>
   <div class="orb orb3"></div>
+  <div id="particles"></div>
+
+  <div class="rope-wrap" id="ropeWrap">
+    <div class="rope-inner sway" id="ropeInner">
+      <div class="rope" id="rope"></div>
+      <div class="knot"></div>
+    </div>
+  </div>
 
   <div class="wrap">
-    <div class="badge"><span class="dot"></span>Quote of the Day</div>
-    <div class="card" id="card">
+    <div class="card card-sway" id="card">
       <div class="quote-mark">&ldquo;</div>
       <div class="quote-text" id="quoteText">{{ quote }}</div>
       <div class="author" id="quoteAuthor">{{ author }}</div>
       <div class="actions">
-        <button class="primary" id="newBtn" onclick="newQuote(event)">✨ New quote</button>
-        <button onclick="copyQuote()">📋 Copy</button>
-        <button onclick="shareQuote()">🔗 Share</button>
+        <button class="primary" id="newBtn" onclick="newQuote()"><span id="newBtnLabel">✨ New quote</span></button>
+        <button class="btn-copy" onclick="copyQuote()">📋 Copy</button>
+        <button class="btn-share" onclick="shareQuote()">🔗 Share</button>
       </div>
     </div>
-    <div class="footer-note">Powered by ZenQuotes • A new quote every day</div>
   </div>
   <div class="toast" id="toast"></div>
 
@@ -202,21 +262,43 @@ HTML_PAGE = """
   const qAuthor = document.getElementById('quoteAuthor');
   const toast = document.getElementById('toast');
   const newBtn = document.getElementById('newBtn');
+  const particlesContainer = document.getElementById('particles');
+  const ropeWrap = document.getElementById('ropeWrap');
+  const ropeInner = document.getElementById('ropeInner');
+  const rope = document.getElementById('rope');
 
-  // 3D tilt effect following the mouse
-  card.addEventListener('mousemove', (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -6;
-    const rotateY = ((x - centerX) / centerX) * 6;
-    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
-  });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = 'rotateX(0) rotateY(0) scale(1)';
-  });
+  function updateRope(){
+    const cardRect = card.getBoundingClientRect();
+    const cardCenterX = cardRect.left + cardRect.width / 2;
+    const cardTopY = cardRect.top;
+
+    ropeWrap.style.left = (cardCenterX - 7) + 'px';
+    const length = Math.max(20, cardTopY - 4);
+    rope.style.height = length + 'px';
+    ropeWrap.style.visibility = cardTopY < 8 ? 'hidden' : 'visible';
+
+    requestAnimationFrame(updateRope);
+  }
+  requestAnimationFrame(updateRope);
+
+  function spawnParticle(startMidway){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 3 + Math.random() * 7;
+    const duration = 10 + Math.random() * 10;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDuration = duration + 's';
+    p.style.opacity = 0.4 + Math.random() * 0.5;
+    if (startMidway) {
+      p.style.animationDelay = '-' + (Math.random() * duration) + 's';
+    }
+    particlesContainer.appendChild(p);
+    setTimeout(()=> p.remove(), 21000);
+  }
+  for(let i=0;i<60;i++){ spawnParticle(true); }
+  setInterval(()=> spawnParticle(false), 300);
 
   function showToast(msg){
     toast.textContent = msg;
@@ -224,39 +306,50 @@ HTML_PAGE = """
     setTimeout(()=> toast.classList.remove('show'), 1800);
   }
 
-  function burstSparkles(originEl){
-    const rect = originEl.getBoundingClientRect();
-    const emojis = ['✨','⭐','💫'];
-    for(let i=0;i<8;i++){
-      const s = document.createElement('div');
-      s.className = 'sparkle';
-      s.textContent = emojis[Math.floor(Math.random()*emojis.length)];
-      s.style.left = (rect.left + rect.width/2) + 'px';
-      s.style.top = (rect.top + rect.height/2) + 'px';
-      const angle = Math.random() * Math.PI * 2;
-      const dist = 60 + Math.random()*60;
-      s.style.setProperty('--dx', Math.cos(angle)*dist + 'px');
-      s.style.setProperty('--dy', Math.sin(angle)*dist + 'px');
-      document.body.appendChild(s);
-      setTimeout(()=> s.remove(), 900);
-    }
-  }
+  async function newQuote(){
+    newBtn.disabled = true;
+    ropeInner.classList.remove('sway');
+    card.classList.remove('card-sway');
+    card.classList.remove('drop-bounce');
+    card.classList.add('yank-up');
 
-  async function newQuote(e){
-    burstSparkles(newBtn);
-    card.classList.add('fade');
+    const startTime = Date.now();
+    const MIN_HIDDEN_TIME = 220;
+
+    let data = null;
     try {
-      const res = await fetch('/quote');
-      const data = await res.json();
-      setTimeout(()=>{
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      const res = await fetch('/quote', { signal: controller.signal });
+      clearTimeout(timeoutId);
+      data = await res.json();
+    } catch(err){
+      showToast('Could not fetch a new quote — try again');
+    }
+
+    const elapsed = Date.now() - startTime;
+    const remaining = Math.max(0, MIN_HIDDEN_TIME - elapsed);
+
+    setTimeout(() => {
+      if (data) {
         qText.textContent = data.quote;
         qAuthor.textContent = data.author;
-        card.classList.remove('fade');
-      }, 220);
-    } catch(err){
-      card.classList.remove('fade');
-      showToast('Could not fetch a new quote');
-    }
+      }
+      card.classList.remove('yank-up');
+      void card.offsetWidth;
+      card.classList.add('drop-bounce');
+
+      setTimeout(() => {
+        ropeInner.classList.add('rope-stretch');
+        setTimeout(() => {
+          ropeInner.classList.remove('rope-stretch');
+          ropeInner.classList.add('sway');
+          card.classList.add('card-sway');
+        }, 500);
+      }, 480);
+
+      newBtn.disabled = false;
+    }, remaining);
   }
 
   function copyQuote(){
@@ -266,11 +359,8 @@ HTML_PAGE = """
 
   function shareQuote(){
     const text = `"${qText.textContent}" — ${qAuthor.textContent}`;
-    if (navigator.share) {
-      navigator.share({ text, title: 'Daily Spark' }).catch(()=>{});
-    } else {
-      navigator.clipboard.writeText(text).then(()=> showToast('Copied — share it anywhere ✅'));
-    }
+    if (navigator.share) { navigator.share({ text, title: 'Daily Spark' }).catch(()=>{}); }
+    else { navigator.clipboard.writeText(text).then(()=> showToast('Copied — share it anywhere ✅')); }
   }
 </script>
 </body>
