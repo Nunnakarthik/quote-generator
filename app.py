@@ -68,7 +68,6 @@ FALLBACK_QUOTES = [
     {"quote": "Not all those who wander are lost.", "author": "J.R.R. Tolkien"},
     {"quote": "You must be the change you wish to see in the world.", "author": "Mahatma Gandhi"},
 
-    # Funny / comedy
     {"quote": "I'm not lazy, I'm on energy-saving mode.", "author": "Unknown"},
     {"quote": "I used to think I was indecisive, but now I'm not so sure.", "author": "Unknown"},
     {"quote": "Common sense is like deodorant. The people who need it most never use it.", "author": "Unknown"},
@@ -82,7 +81,6 @@ FALLBACK_QUOTES = [
     {"quote": "I'm sorry, if you were right, I'd agree with you.", "author": "Robin Williams"},
     {"quote": "Procrastination is the art of keeping up with yesterday.", "author": "Don Marquis"},
 
-    # Romantic / love
     {"quote": "Whatever our souls are made of, his and mine are the same.", "author": "Emily Brontë"},
     {"quote": "You had me at hello.", "author": "Jerry Maguire (film)"},
     {"quote": "I love you not only for what you are, but for what I am when I am with you.", "author": "Roy Croft"},
@@ -144,22 +142,26 @@ HTML_PAGE = """
 
   .wrap {
     width:100%; max-width:600px; position:relative; z-index:1;
-    display:flex; flex-direction:column; align-items:flex-start;
-    padding-top:14vh;
+    display:flex; flex-direction:column; align-items:center;
   }
 
-  .quote-body { transition: opacity 0.15s ease; }
+  .quote-body { transition: opacity 0.15s ease; width:100%; }
   .quote-body.hidden { opacity:0; }
 
   .quote-text {
     font-family:'Fraunces', serif; font-style:italic; font-weight:500;
-    font-size:32px; line-height:1.5; color:#fdfaf3; margin-bottom:28px;
+    font-size:32px; line-height:1.5; color:#fdfaf3; margin-bottom:14px;
     text-shadow: 0 2px 30px rgba(0,0,0,0.7), 0 0 60px rgba(0,0,0,0.4);
+    text-align:center;
   }
-  .author { font-size:16px; font-weight:700; color:#fbbf24; text-shadow:0 2px 12px rgba(0,0,0,0.6); }
+  .author {
+    font-size:16px; font-weight:700; color:#fbbf24;
+    text-shadow:0 2px 12px rgba(0,0,0,0.6);
+    width:100%; text-align:right; margin-bottom:14px;
+  }
   .author::before { content:'— '; opacity:0.7; }
 
-  .actions { display:flex; gap:10px; margin-top:36px; flex-wrap:wrap; }
+  .actions { display:flex; gap:10px; margin-top:22px; flex-wrap:wrap; justify-content:center; }
   button {
     font-family:'Inter',sans-serif; font-weight:600; font-size:14px;
     padding:13px 22px; border-radius:13px; border:none; cursor:pointer;
@@ -183,7 +185,7 @@ HTML_PAGE = """
   .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
   @media (max-width:480px){
-    .quote-text{ font-size:24px; } .wrap{ padding-top:10vh; }
+    .quote-text{ font-size:24px; }
   }
 </style>
 </head>
@@ -325,6 +327,7 @@ HTML_PAGE = """
     octx.fillStyle = '#ffffff';
 
     octx.font = 'italic 500 32px Georgia, serif';
+    octx.textAlign = 'center';
     const words = quoteStr.split(' ');
     let line = '', y = 34, lineHeight = 40;
     const lines = [];
@@ -335,11 +338,12 @@ HTML_PAGE = """
       } else line = test;
     });
     lines.push(line);
-    lines.forEach(l => { octx.fillText(l.trim(), 0, y); y += lineHeight; });
+    lines.forEach(l => { octx.fillText(l.trim(), boxWidth/2, y); y += lineHeight; });
 
     y += 20;
     octx.font = 'bold 16px Arial';
-    octx.fillText('— ' + authorStr, 0, y);
+    octx.textAlign = 'right';
+    octx.fillText('— ' + authorStr, boxWidth - 5, y);
 
     const imgData = octx.getImageData(0, 0, off.width, off.height).data;
     const points = [];
