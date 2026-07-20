@@ -67,6 +67,32 @@ FALLBACK_QUOTES = [
     {"quote": "Simplicity is the ultimate sophistication.", "author": "Leonardo da Vinci"},
     {"quote": "Not all those who wander are lost.", "author": "J.R.R. Tolkien"},
     {"quote": "You must be the change you wish to see in the world.", "author": "Mahatma Gandhi"},
+
+    # Funny / comedy
+    {"quote": "I'm not lazy, I'm on energy-saving mode.", "author": "Unknown"},
+    {"quote": "I used to think I was indecisive, but now I'm not so sure.", "author": "Unknown"},
+    {"quote": "Common sense is like deodorant. The people who need it most never use it.", "author": "Unknown"},
+    {"quote": "I'm on a seafood diet. I see food and I eat it.", "author": "Unknown"},
+    {"quote": "Behind every great man is a woman rolling her eyes.", "author": "Jim Carrey"},
+    {"quote": "I told my computer I needed a break, and now it won't stop sending me KitKat ads.", "author": "Unknown"},
+    {"quote": "I am on a whiskey diet. I've lost three days already.", "author": "Tommy Cooper"},
+    {"quote": "The trouble with having an open mind is that people keep coming along and putting things in it.", "author": "Terry Pratchett"},
+    {"quote": "I have not failed. I've just found 10,000 ways that won't work.", "author": "Thomas Edison"},
+    {"quote": "Age is of no importance unless you're a cheese.", "author": "Billie Burke"},
+    {"quote": "I'm sorry, if you were right, I'd agree with you.", "author": "Robin Williams"},
+    {"quote": "Procrastination is the art of keeping up with yesterday.", "author": "Don Marquis"},
+
+    # Romantic / love
+    {"quote": "Whatever our souls are made of, his and mine are the same.", "author": "Emily Brontë"},
+    {"quote": "You had me at hello.", "author": "Jerry Maguire (film)"},
+    {"quote": "I love you not only for what you are, but for what I am when I am with you.", "author": "Roy Croft"},
+    {"quote": "In all the world, there is no heart for me like yours.", "author": "Maya Angelou"},
+    {"quote": "To love and be loved is to feel the sun from both sides.", "author": "David Viscott"},
+    {"quote": "I have found the one whom my soul loves.", "author": "Song of Solomon"},
+    {"quote": "You are my today and all of my tomorrows.", "author": "Leo Christopher"},
+    {"quote": "If I know what love is, it is because of you.", "author": "Hermann Hesse"},
+    {"quote": "Being deeply loved by someone gives you strength, while loving someone deeply gives you courage.", "author": "Lao Tzu"},
+    {"quote": "Grow old with me, the best is yet to be.", "author": "Robert Browning"},
 ]
 
 ZEN_RANDOM_URL = "https://zenquotes.io/api/random"
