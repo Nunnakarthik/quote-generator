@@ -476,6 +476,21 @@ HTML_PAGE = """
   const toast = document.getElementById('toast');
   const newBtn = document.getElementById('newBtn');
 
+  // Quietly try to upgrade to a fresh quote after initial fast render, without blocking page load
+  (async () => {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000);
+      const res = await fetch('/quote/today', { signal: controller.signal });
+      clearTimeout(timeoutId);
+      const data = await res.json();
+      if (data && data.quote) {
+        qText.textContent = data.quote;
+        qAuthor.textContent = data.author;
+      }
+    } catch(e) { /* silently keep the fallback quote already shown */ }
+  })();
+
   function showToast(msg){
     toast.textContent = msg; toast.classList.add('show');
     setTimeout(()=> toast.classList.remove('show'), 1800);
@@ -491,7 +506,7 @@ HTML_PAGE = """
     const fetchPromise = (async () => {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3000);
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
         const res = await fetch('/quote', { signal: controller.signal });
         clearTimeout(timeoutId);
         return await res.json();
@@ -538,7 +553,9 @@ HTML_PAGE = """
 
 @app.route("/")
 def home():
-    q = get_quote_of_the_day()
+    # Serve instantly from local fallback — no blocking external call on page load
+    index = date.today().toordinal() % len(FALLBACK_QUOTES)
+    q = FALLBACK_QUOTES[index]
     return render_template_string(HTML_PAGE, quote=q["quote"], author=q["author"])
 
 @app.route("/quote")
