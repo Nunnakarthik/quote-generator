@@ -67,7 +67,6 @@ FALLBACK_QUOTES = [
     {"quote": "Simplicity is the ultimate sophistication.", "author": "Leonardo da Vinci"},
     {"quote": "Not all those who wander are lost.", "author": "J.R.R. Tolkien"},
     {"quote": "You must be the change you wish to see in the world.", "author": "Mahatma Gandhi"},
-
     {"quote": "I'm not lazy, I'm on energy-saving mode.", "author": "Unknown"},
     {"quote": "I used to think I was indecisive, but now I'm not so sure.", "author": "Unknown"},
     {"quote": "Common sense is like deodorant. The people who need it most never use it.", "author": "Unknown"},
@@ -80,7 +79,6 @@ FALLBACK_QUOTES = [
     {"quote": "Age is of no importance unless you're a cheese.", "author": "Billie Burke"},
     {"quote": "I'm sorry, if you were right, I'd agree with you.", "author": "Robin Williams"},
     {"quote": "Procrastination is the art of keeping up with yesterday.", "author": "Don Marquis"},
-
     {"quote": "Whatever our souls are made of, his and mine are the same.", "author": "Emily Brontë"},
     {"quote": "You had me at hello.", "author": "Jerry Maguire (film)"},
     {"quote": "I love you not only for what you are, but for what I am when I am with you.", "author": "Roy Croft"},
@@ -198,9 +196,9 @@ HTML_PAGE = """
       <div class="author" id="quoteAuthor">{{ author }}</div>
     </div>
     <div class="actions">
-      <button class="primary" id="newBtn" onclick="newQuote()"><span id="newBtnLabel"> New quote</span></button>
-      <button class="btn-copy" onclick="copyQuote()"> Copy</button>
-      <button class="btn-share" onclick="shareQuote()"> Share</button>
+      <button class="primary" id="newBtn" onclick="newQuote()"><span id="newBtnLabel">✨ New quote</span></button>
+      <button class="btn-copy" onclick="copyQuote()">📋 Copy</button>
+      <button class="btn-share" onclick="shareQuote()">🔗 Share</button>
     </div>
   </div>
   <div class="toast" id="toast"></div>
@@ -347,7 +345,7 @@ HTML_PAGE = """
 
     const imgData = octx.getImageData(0, 0, off.width, off.height).data;
     const points = [];
-    const step = 4;
+    const step = 7; // fewer particles = smoother animation
     for (let py = 0; py < off.height; py += step){
       for (let px = 0; px < off.width; px += step){
         const idx = (py * off.width + px) * 4;
@@ -361,7 +359,7 @@ HTML_PAGE = """
     const points = samplePointsForText(quoteStr, authorStr, rect.width);
     explodeParticles = points.map(p => {
       const angle = Math.random() * Math.PI * 2;
-      const speed = 1.5 + Math.random() * 4;
+      const speed = 1.2 + Math.random() * 3;
       return {
         x: rect.left + p.x, y: rect.top + p.y,
         vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
@@ -376,7 +374,7 @@ HTML_PAGE = """
     reformParticles = points.map(p => {
       const tx = rect.left + p.x, ty = rect.top + p.y;
       const angle = Math.random() * Math.PI * 2;
-      const dist = 120 + Math.random() * 260;
+      const dist = 100 + Math.random() * 200;
       return {
         sx: tx + Math.cos(angle)*dist, sy: ty + Math.sin(angle)*dist,
         tx, ty, progress: 0, size: 0.8 + Math.random()*1.6,
@@ -414,7 +412,7 @@ HTML_PAGE = """
 
   function drawExplode(){
     explodeParticles = explodeParticles.filter(p => {
-      p.x += p.vx; p.y += p.vy; p.vx *= 0.97; p.vy *= 0.97; p.life -= 0.045;
+      p.x += p.vx; p.y += p.vy; p.vx *= 0.96; p.vy *= 0.96; p.life -= 0.035;
       if (p.life <= 0) return false;
       drawGlowStar(p.x, p.y, p.size, p.life, p.color, p.size > 1.6);
       return true;
@@ -424,7 +422,7 @@ HTML_PAGE = """
   function drawReform(){
     let stillGoing = false;
     reformParticles.forEach(p => {
-      if (p.progress < 1) { p.progress += 0.055; stillGoing = true; }
+      if (p.progress < 1) { p.progress += 0.045; stillGoing = true; }
       const t = Math.min(p.progress, 1);
       const ease = 1 - Math.pow(1-t, 3);
       const x = p.sx + (p.tx - p.sx) * ease;
@@ -476,20 +474,13 @@ HTML_PAGE = """
   const toast = document.getElementById('toast');
   const newBtn = document.getElementById('newBtn');
 
-  // Quietly try to upgrade to a fresh quote after initial fast render, without blocking page load
-  (async () => {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 6000);
-      const res = await fetch('/quote/today', { signal: controller.signal });
-      clearTimeout(timeoutId);
-      const data = await res.json();
-      if (data && data.quote) {
-        qText.textContent = data.quote;
-        qAuthor.textContent = data.author;
-      }
-    } catch(e) { /* silently keep the fallback quote already shown */ }
-  })();
+  // On page load: if the user previously saw a quote (from a "New quote" click), show that instead of the server default
+  const savedQuote = localStorage.getItem('sparkLastQuote');
+  const savedAuthor = localStorage.getItem('sparkLastAuthor');
+  if (savedQuote && savedAuthor) {
+    qText.textContent = savedQuote;
+    qAuthor.textContent = savedAuthor;
+  }
 
   function showToast(msg){
     toast.textContent = msg; toast.classList.add('show');
@@ -518,18 +509,21 @@ HTML_PAGE = """
 
     const [data] = await Promise.all([
       fetchPromise,
-      new Promise(r => setTimeout(r, 280))
+      new Promise(r => setTimeout(r, 220))
     ]);
 
     if (data) {
       qText.textContent = data.quote;
       qAuthor.textContent = data.author;
+      // Remember this quote so it's still shown next time the page opens
+      localStorage.setItem('sparkLastQuote', data.quote);
+      localStorage.setItem('sparkLastAuthor', data.author);
     }
 
     const newRect = quoteBody.getBoundingClientRect();
     startReform(newRect, qText.textContent, qAuthor.textContent);
 
-    await new Promise(r => setTimeout(r, 420));
+    await new Promise(r => setTimeout(r, 350));
 
     reformParticles = [];
     quoteBody.classList.remove('hidden');
@@ -553,7 +547,6 @@ HTML_PAGE = """
 
 @app.route("/")
 def home():
-    # Serve instantly from local fallback — no blocking external call on page load
     index = date.today().toordinal() % len(FALLBACK_QUOTES)
     q = FALLBACK_QUOTES[index]
     return render_template_string(HTML_PAGE, quote=q["quote"], author=q["author"])
